@@ -23,6 +23,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import com.example.mobilework.screens.HomeScreen
 import com.example.mobilework.screens.ExamplePage
+import com.example.mobilework.screens.PlayerPlayer
+import com.example.mobilework.screens.PlayerMachine
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,17 +38,29 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        NavigationBar {
-                            NavigationBarItem(
-                                selected = currentRoute == "home",
-                                onClick = { navController.navigate("home") },
-                                icon = { Icon(painterResource(R.drawable.ic_home), contentDescription = "Home") }
-                            )
-                            NavigationBarItem(
-                                selected = currentRoute == "example",
-                                onClick = { navController.navigate("example") },
-                                icon = { Icon(painterResource(R.drawable.ic_example), contentDescription = "Example") }
-                            )
+                        if (!((currentRoute == "PlayerPlayer")||(currentRoute == "PlayerMachine"))) {
+                            NavigationBar {
+                                NavigationBarItem(
+                                    selected = currentRoute == "home",
+                                    onClick = { navController.navigate("home") },
+                                    icon = {
+                                        Icon(
+                                            painterResource(R.drawable.ic_home),
+                                            contentDescription = "Home"
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    selected = currentRoute == "example",
+                                    onClick = { navController.navigate("example") },
+                                    icon = {
+                                        Icon(
+                                            painterResource(R.drawable.ic_example),
+                                            contentDescription = "Example"
+                                        )
+                                    }
+                                )
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxSize()
@@ -56,8 +70,10 @@ class MainActivity : ComponentActivity() {
                         startDestination = "home",
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable("home") { HomeScreen() }
+                        composable("home") { HomeScreen(navController) }
                         composable("example") { ExamplePage() }
+                        composable("PlayerPlayer") { PlayerPlayer(navController) }
+                        composable("PlayerMachine") { PlayerMachine(navController) }
                     }
                 }
 
@@ -70,6 +86,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     MobileWorkTheme {
-        HomeScreen()
+        HomeScreen(navController = rememberNavController())
     }
 }
