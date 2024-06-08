@@ -48,7 +48,7 @@ fun PlayerPlayer(navController: NavHostController, player1: String?, player2: St
                     Text("Home")
                 }
                 Button(onClick = {}) {
-                    Text("Pouse")
+                    Text("Pause")
                 }
             }
         }
