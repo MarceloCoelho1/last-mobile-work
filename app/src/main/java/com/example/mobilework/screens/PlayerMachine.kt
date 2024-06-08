@@ -13,17 +13,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun PlayerMachine(navController: NavHostController) {
-    Column (
+fun PlayerMachine(navController: NavHostController, playerName: String?) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(5f)
                 .background(Color.Red)
-        ){
+        ) {
             Text(
                 text = "Maquina",
                 fontSize = 50.sp,
@@ -36,7 +36,7 @@ fun PlayerMachine(navController: NavHostController) {
                 .weight(1f)
                 .background(Color.Gray)
                 .height(20.dp)
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -57,9 +57,9 @@ fun PlayerMachine(navController: NavHostController) {
                 .fillMaxWidth()
                 .weight(5f)
                 .background(Color.Blue)
-        ){
+        ) {
             Text(
-                text = "Jogador",
+                text = playerName ?: "Jogador",
                 fontSize = 50.sp,
                 color = Color.White
             )

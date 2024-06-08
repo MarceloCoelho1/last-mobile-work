@@ -13,19 +13,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun PlayerPlayer(navController: NavHostController) {
-    Column (
+fun PlayerPlayer(navController: NavHostController, player1: String?, player2: String?) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(5f)
                 .background(Color.Red)
-        ){
+        ) {
             Text(
-                text = "Jogador 2",
+                text = player2 ?: "Jogador 2",
                 fontSize = 50.sp,
                 color = Color.White
             )
@@ -36,7 +36,7 @@ fun PlayerPlayer(navController: NavHostController) {
                 .weight(1f)
                 .background(Color.Gray)
                 .height(20.dp)
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -57,9 +57,9 @@ fun PlayerPlayer(navController: NavHostController) {
                 .fillMaxWidth()
                 .weight(5f)
                 .background(Color.Blue)
-        ){
+        ) {
             Text(
-                text = "Jogador 1",
+                text = player1 ?: "Jogador 1",
                 fontSize = 50.sp,
                 color = Color.White
             )

@@ -7,24 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.mobilework.ui.theme.MobileWorkTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
-import com.example.mobilework.screens.HomeScreen
-import com.example.mobilework.screens.ExamplePage
-import com.example.mobilework.screens.PlayerPlayer
-import com.example.mobilework.screens.PlayerMachine
+import com.example.mobilework.screens.*
+import com.example.mobilework.ui.theme.MobileWorkTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,32 +29,6 @@ class MainActivity : ComponentActivity() {
                 val currentRoute = backStackEntry?.destination?.route
 
                 Scaffold(
-                    bottomBar = {
-                        if (!((currentRoute == "PlayerPlayer")||(currentRoute == "PlayerMachine"))) {
-                            NavigationBar {
-                                NavigationBarItem(
-                                    selected = currentRoute == "home",
-                                    onClick = { navController.navigate("home") },
-                                    icon = {
-                                        Icon(
-                                            painterResource(R.drawable.ic_home),
-                                            contentDescription = "Home"
-                                        )
-                                    }
-                                )
-                                NavigationBarItem(
-                                    selected = currentRoute == "example",
-                                    onClick = { navController.navigate("example") },
-                                    icon = {
-                                        Icon(
-                                            painterResource(R.drawable.ic_example),
-                                            contentDescription = "Example"
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                    },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     NavHost(
@@ -72,11 +38,19 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("home") { HomeScreen(navController) }
                         composable("example") { ExamplePage() }
-                        composable("PlayerPlayer") { PlayerPlayer(navController) }
-                        composable("PlayerMachine") { PlayerMachine(navController) }
+                        composable("PlayerPlayer/{player1}/{player2}") { backStackEntry ->
+                            val player1 = backStackEntry.arguments?.getString("player1")
+                            val player2 = backStackEntry.arguments?.getString("player2")
+                            PlayerPlayer(navController, player1, player2)
+                        }
+                        composable("PlayerMachine/{playerName}") { backStackEntry ->
+                            val playerName = backStackEntry.arguments?.getString("playerName")
+                            PlayerMachine(navController, playerName)
+                        }
+                        composable("EnterNameSinglePlayer") { EnterNameSinglePlayer(navController) }
+                        composable("EnterNamesTwoPlayers") { EnterNamesTwoPlayers(navController) }
                     }
                 }
-
             }
         }
     }
