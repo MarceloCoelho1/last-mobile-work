@@ -1,5 +1,4 @@
 package com.example.mobilework.screens
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,40 +9,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import java.lang.reflect.Modifier
 
 @Composable
 fun fight(navController: NavHostController, cardPlayer: String?) {
     var winner by remember { mutableStateOf(0) } // 1 player wins, 2 machine wins
 
-    when(ChooseHand()) {
-        "rock" -> if(cardPlayer == "scissor") {
+    when (ChooseHand()) {
+        "rock" -> if (cardPlayer == "scissor") {
             winner = 2
-        } else if(cardPlayer == "paper") {
+        } else if (cardPlayer == "paper") {
             winner = 1
         }
-        "paper" -> if(cardPlayer == "rock") {
+        "paper" -> if (cardPlayer == "rock") {
             winner = 2
-        } else if(cardPlayer == "scissor") {
+        } else if (cardPlayer == "scissor") {
             winner = 1
         }
-        "scissor" -> if(cardPlayer == "paper") {
+        "scissor" -> if (cardPlayer == "paper") {
             winner = 2
-        } else if(cardPlayer == "rock") {
+        } else if (cardPlayer == "rock") {
             winner = 1
         }
     }
 
-    if(winner == 1) {
+    if (winner == 1) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Box(
+            Box {
 
-            ) {
                 Text(
                     text = "You win!",
                     fontSize = 50.sp
@@ -64,9 +62,8 @@ fun fight(navController: NavHostController, cardPlayer: String?) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Box(
+            Box {
 
-            ) {
                 Text(
                     text = "You lose!",
                     fontSize = 50.sp
