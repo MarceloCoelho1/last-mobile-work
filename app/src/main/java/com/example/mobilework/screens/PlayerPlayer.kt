@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -32,6 +33,7 @@ fun PlayerPlayer(
     // Variáveis para armazenar a vida dos jogadores
     var player1Life by remember { mutableStateOf(3) }
     var player2Life by remember { mutableStateOf(3) }
+    var isWinnerDisplayed by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -51,7 +53,10 @@ fun PlayerPlayer(
                 fontSize = 50.sp,
                 color = Color.White,
             )
-            Row {
+            Row (
+                modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ){
                 repeat(player1Life) {
                     Image(
                         painter = painterResource(id = R.drawable.heart),
@@ -65,12 +70,37 @@ fun PlayerPlayer(
                     player1Choice = choice
                     checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
                         winner = result
-                        if (result.contains("venceu")) player2Life -= 1
+                        if (result.contains("venceu")) player1Life -= 1
+                        if (player1Life == 0 || player2Life == 0) {
+                            isWinnerDisplayed = true
+                        }
                     }
                 }
             }
         }
-
+        // Área de controle no meio
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(Color.Gray)
+                .height(20.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PressedButtons("Home") { navController.navigate("home") }
+                PressedButtons("Restart") {
+                    player1Life = 3
+                    player2Life = 3
+                    winner = null
+                }
+            }
+        }
         // Área do jogador 2
         Column(
             modifier = Modifier
@@ -86,7 +116,10 @@ fun PlayerPlayer(
                 fontSize = 50.sp,
                 color = Color.White
             )
-            Row {
+            Row (
+                modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ){
                 repeat(player2Life) {
                     Image(
                         painter = painterResource(id = R.drawable.heart),
@@ -100,9 +133,38 @@ fun PlayerPlayer(
                     player2Choice = choice
                     checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
                         winner = result
-                        if (result.contains("venceu")) player1Life -= 1
+                        if (result.contains("venceu")) player2Life -= 1
+                        if (player1Life == 0 || player2Life == 0) {
+                            isWinnerDisplayed = true
+                        }
                     }
                 }
+            }
+            if (player1Life == 0 ||player2Life == 0 ) {
+                AlertDialog(
+                    onDismissRequest = {
+                        isWinnerDisplayed = false
+                        navController.navigate("home")
+                    },
+                    title = { Text(text = "Fim de Jogo") },
+                    text = {
+                        Text(
+                            text = "O vencedor é ${if (player1Life > player2Life) player1Name ?: "Jogador 1" else player2Name ?: "Jogador 2"}!",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                isWinnerDisplayed = false
+                                navController.navigate("home")
+                            }
+                        ) {
+                            Text("Ok")
+                        }
+                    }
+                )
             }
         }
 
