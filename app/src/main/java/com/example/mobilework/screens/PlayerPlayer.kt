@@ -53,10 +53,10 @@ fun PlayerPlayer(
                 fontSize = 50.sp,
                 color = Color.White,
             )
-            Row (
+            Row(
                 modifier = Modifier.padding(end = 16.dp, top = 16.dp),
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
                 repeat(player1Life) {
                     Image(
                         painter = painterResource(id = R.drawable.heart),
@@ -68,16 +68,27 @@ fun PlayerPlayer(
             if (winner == null) {
                 GameOptions { choice ->
                     player1Choice = choice
-                    checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
-                        winner = result
-                        if (result.contains("venceu")) player1Life -= 1
-                        if (player1Life == 0 || player2Life == 0) {
-                            isWinnerDisplayed = true
+                    if (player2Choice != null) {
+                        checkResult(
+                            player1Choice,
+                            player2Choice,
+                            player1Name,
+                            player2Name,
+                            player1Life,
+                            player2Life
+                        ) { result, loser ->
+                            winner = result
+                            if (loser == 1) player1Life -= 1
+                            if (loser == 2) player2Life -= 1
+                            if (player1Life == 0 || player2Life == 0) {
+                                isWinnerDisplayed = true
+                            }
                         }
                     }
                 }
             }
         }
+
         // Área de controle no meio
         Box(
             modifier = Modifier
@@ -101,6 +112,7 @@ fun PlayerPlayer(
                 }
             }
         }
+
         // Área do jogador 2
         Column(
             modifier = Modifier
@@ -116,10 +128,10 @@ fun PlayerPlayer(
                 fontSize = 50.sp,
                 color = Color.White
             )
-            Row (
+            Row(
                 modifier = Modifier.padding(end = 16.dp, top = 16.dp),
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
                 repeat(player2Life) {
                     Image(
                         painter = painterResource(id = R.drawable.heart),
@@ -131,16 +143,26 @@ fun PlayerPlayer(
             if (winner == null) {
                 GameOptions { choice ->
                     player2Choice = choice
-                    checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
-                        winner = result
-                        if (result.contains("venceu")) player2Life -= 1
-                        if (player1Life == 0 || player2Life == 0) {
-                            isWinnerDisplayed = true
+                    if (player1Choice != null) {
+                        checkResult(
+                            player1Choice,
+                            player2Choice,
+                            player1Name,
+                            player2Name,
+                            player1Life,
+                            player2Life
+                        ) { result, loser ->
+                            winner = result
+                            if (loser == 1) player1Life -= 1
+                            if (loser == 2) player2Life -= 1
+                            if (player1Life == 0 || player2Life == 0) {
+                                isWinnerDisplayed = true
+                            }
                         }
                     }
                 }
             }
-            if (player1Life == 0 ||player2Life == 0 ) {
+            if (player1Life == 0 || player2Life == 0) {
                 AlertDialog(
                     onDismissRequest = {
                         isWinnerDisplayed = false
@@ -178,7 +200,8 @@ fun PlayerPlayer(
                         player1Choice = null
                         player2Choice = null
                         winner = null
-                    },contentAlignment = Alignment.Center
+                    },
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = it,
@@ -227,16 +250,18 @@ fun checkResult(
     player2Choice: String?,
     player1Name: String?,
     player2Name: String?,
-    setWinner: (String) -> Unit
+    player1Life: Int,
+    player2Life: Int,
+    setWinner: (String, Int) -> Unit
 ) {
     if (player1Choice != null && player2Choice != null) {
-        val result = when {
-            player1Choice == player2Choice -> "Empate!"
-            player1Choice == "rock" && player2Choice == "scissor" -> "${player1Name ?: "Jogador 1"} venceu!"
-            player1Choice == "scissor" && player2Choice == "paper" -> "${player1Name ?: "Jogador 1"} venceu!"
-            player1Choice == "paper" && player2Choice == "rock" -> "${player1Name ?: "Jogador 1"} venceu!"
-            else -> "${player2Name ?: "Jogador 2"} venceu!"
+        val (result, loser) = when {
+            player1Choice == player2Choice -> "Empate!" to 0
+            player1Choice == "rock" && player2Choice == "scissor" -> "${player1Name ?: "Jogador 1"} venceu!" to 2
+            player1Choice == "scissor" && player2Choice == "paper" -> "${player1Name ?: "Jogador 1"} venceu!" to 2
+            player1Choice == "paper" && player2Choice == "rock" -> "${player1Name ?: "Jogador 1"} venceu!" to 2
+            else -> "${player2Name ?: "Jogador 2"} venceu!" to 1
         }
-        setWinner(result)
+        setWinner(result, loser)
     }
 }
