@@ -47,6 +47,10 @@ class MainActivity : ComponentActivity() {
                             val playerName = backStackEntry.arguments?.getString("playerName")
                             PlayerMachine(navController, playerName)
                         }
+                        composable("PlayerFightMachine/{playerChoice}") { backStackEntry ->
+                            val playerChoice = backStackEntry.arguments?.getString("playerChoice")
+                            PlayerFightMachine(navController, playerChoice)
+                        }
                         composable("EnterNameSinglePlayer") { EnterNameSinglePlayer(navController) }
                         composable("EnterNamesTwoPlayers") { EnterNamesTwoPlayers(navController) }
                     }
