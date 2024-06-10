@@ -1,6 +1,7 @@
 package com.example.mobilework.screens
 
 import android.service.controls.templates.ControlButton
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,57 +29,49 @@ fun PlayerPlayer(
     var player2Choice by remember { mutableStateOf<String?>(null) }
     var winner by remember { mutableStateOf<String?>(null) }
 
+    // Variáveis para armazenar a vida dos jogadores
+    var player1Life by remember { mutableStateOf(3) }
+    var player2Life by remember { mutableStateOf(3) }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-// Área do jogador 1
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(5f)
-                    .background(Color.Blue)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = player1Name ?: "Jogador 1",
-                    fontSize = 50.sp,
-                    color = Color.White
-                )
-                if (winner == null) {
-                    GameOptions { choice ->
-                        player1Choice = choice
-                        checkResult(player1Choice, player2Choice, player1Name, player2Name) { winner = it }
+        // Área do jogador 1
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(5f)
+                .background(Color.Blue)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(
+                text = player1Name ?: "Jogador 1",
+                fontSize = 50.sp,
+                color = Color.White,
+            )
+            Row {
+                repeat(player1Life) {
+                    Image(
+                        painter = painterResource(id = R.drawable.heart),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+            if (winner == null) {
+                GameOptions { choice ->
+                    player1Choice = choice
+                    checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
+                        winner = result
+                        if (result.contains("venceu")) player2Life -= 1
                     }
                 }
             }
-        // Área de controle no meio
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .background(Color.Gray)
-                .height(20.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PressableButton("Home") { navController.navigate("home") }
-                PressableButton("Restart") {
-                    player1Choice = null
-                    player2Choice = null
-                    winner = null
-                }
-            }
-
         }
 
-// Área do jogador 2
+        // Área do jogador 2
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,10 +86,22 @@ fun PlayerPlayer(
                 fontSize = 50.sp,
                 color = Color.White
             )
+            Row {
+                repeat(player2Life) {
+                    Image(
+                        painter = painterResource(id = R.drawable.heart),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
             if (winner == null) {
                 GameOptions { choice ->
                     player2Choice = choice
-                    checkResult(player1Choice, player2Choice, player1Name, player2Name) { winner = it }
+                    checkResult(player1Choice, player2Choice, player1Name, player2Name) { result ->
+                        winner = result
+                        if (result.contains("venceu")) player1Life -= 1
+                    }
                 }
             }
         }
