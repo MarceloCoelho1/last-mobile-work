@@ -15,6 +15,7 @@ import com.example.mobilework.R
 import com.example.mobilework.components.GameButton
 import kotlin.random.Random
 
+
 @Composable
 fun PlayerMachine(navController: NavHostController, playerName: String?) {
     var playerChoice by remember { mutableStateOf("") }
@@ -74,6 +75,9 @@ fun PlayerMachine(navController: NavHostController, playerName: String?) {
                     machineChoice = ""
                     winner = null
                 }
+                PressedButtons("Player Status") {
+                    navController.navigate("playerStatus")
+                }
             }
         }
 
@@ -98,37 +102,13 @@ fun PlayerMachine(navController: NavHostController, playerName: String?) {
                     fontSize = 18.sp,
                     color = Color.White
                 )
-                GameOption { choice ->
+                GameOptions { choice ->
                     playerChoice = choice
                     machineChoice = getMachineChoice()
                     winner = determineWinner(playerChoice, machineChoice, playerName)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GameOption(onClick: (String) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        GameButton(
-            image = painterResource(id = R.drawable.rock),
-            text = "Rock",
-            onClick = { onClick("rock") }
-        )
-        GameButton(
-            image = painterResource(id = R.drawable.paper),
-            text = "Paper",
-            onClick = { onClick("paper") }
-        )
-        GameButton(
-            image = painterResource(id = R.drawable.scissor),
-            text = "Scissor",
-            onClick = { onClick("scissor") }
-        )
     }
 }
 

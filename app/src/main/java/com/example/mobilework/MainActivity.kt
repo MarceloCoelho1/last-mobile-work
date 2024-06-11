@@ -53,17 +53,17 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("EnterNameSinglePlayer") { EnterNameSinglePlayer(navController) }
                         composable("EnterNamesTwoPlayers") { EnterNamesTwoPlayers(navController) }
+                        composable("playerStatus") { backStackEntry ->
+                            val playerName = backStackEntry.arguments?.getString("playerName")
+                            PlayerStatusScreen(navController, playerName,
+                                rockCount = 0,
+                                paperCount = 0,
+                                scissorCount = 0
+                            )
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MobileWorkTheme {
-        HomeScreen(navController = rememberNavController())
     }
 }
