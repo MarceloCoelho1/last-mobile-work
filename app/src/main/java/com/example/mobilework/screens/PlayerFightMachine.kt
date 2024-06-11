@@ -10,13 +10,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun PlayerFightMachine(navController: NavHostController, playerChoice: String?) {
+fun PlayerFightMachine(navController: NavHostController, playerChoice: String?, playerName: String?) {
     var machineChoice by remember { mutableStateOf("") }
     var winner by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         machineChoice = getMachineChoice()
-        winner = determineWinner(playerChoice ?: "", machineChoice, "Player")
+        winner = determineWinner(playerChoice ?: "", machineChoice, playerName ?: "Player")
     }
 
     Column(
@@ -33,3 +33,4 @@ fun PlayerFightMachine(navController: NavHostController, playerChoice: String?) 
         Text(text = winner ?: "", fontSize = 24.sp)
     }
 }
+

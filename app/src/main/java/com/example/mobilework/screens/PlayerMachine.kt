@@ -2,12 +2,14 @@ package com.example.mobilework.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -15,12 +17,20 @@ import com.example.mobilework.R
 import com.example.mobilework.components.GameButton
 import kotlin.random.Random
 
-
 @Composable
-fun PlayerMachine(navController: NavHostController, playerName: String?) {
+fun PlayerMachine(
+    navController: NavHostController,
+    playerName: String?
+) {
     var playerChoice by remember { mutableStateOf("") }
     var machineChoice by remember { mutableStateOf("") }
     var winner by remember { mutableStateOf<String?>(null) }
+    var isStatusDialogVisible by remember { mutableStateOf(false) }
+
+    // Variáveis de estado para manter a contagem de escolhas
+    var rockCount by remember { mutableStateOf(0) }
+    var paperCount by remember { mutableStateOf(0) }
+    var scissorCount by remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -76,7 +86,7 @@ fun PlayerMachine(navController: NavHostController, playerName: String?) {
                     winner = null
                 }
                 PressedButtons("Player Status") {
-                    navController.navigate("playerStatus")
+                    isStatusDialogVisible = true
                 }
             }
         }
@@ -106,15 +116,44 @@ fun PlayerMachine(navController: NavHostController, playerName: String?) {
                     playerChoice = choice
                     machineChoice = getMachineChoice()
                     winner = determineWinner(playerChoice, machineChoice, playerName)
+
+                    // Atualiza a contagem de escolhas
+                    when (choice) {
+                        "rock" -> rockCount++
+                        "paper" -> paperCount++
+                        "scissor" -> scissorCount++
+                    }
                 }
             }
         }
+    }
+
+    if (isStatusDialogVisible) {
+        AlertDialog(
+            onDismissRequest = {
+                isStatusDialogVisible = false
+            },
+            title = { Text(text = "Player Status") },
+            text = {
+                Column {
+                    Text(text = "Player Name: ${playerName ?: "Player"}", fontSize = 18.sp)
+                    Text(text = "Rock Count: $rockCount", fontSize = 18.sp)
+                    Text(text = "Paper Count: $paperCount", fontSize = 18.sp)
+                    Text(text = "Scissor Count: $scissorCount", fontSize = 18.sp)
+                }
+            },
+            confirmButton = {
+                Button(onClick = { isStatusDialogVisible = false }) {
+                    Text("Close")
+                }
+            }
+        )
     }
 }
 
 @Composable
 fun PressedButtons(text: String, onClick: () -> Unit) {
-    androidx.compose.material3.Button(onClick = onClick) {
+    Button(onClick = onClick) {
         Text(text)
     }
 }
@@ -136,3 +175,4 @@ fun determineWinner(playerChoice: String, machineChoice: String, playerName: Str
         else -> "Maquina venceu!"
     }
 }
+

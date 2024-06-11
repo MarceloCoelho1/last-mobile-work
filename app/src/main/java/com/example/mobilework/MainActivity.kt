@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mobilework.screens.*
 import com.example.mobilework.ui.theme.MobileWorkTheme
 
@@ -47,18 +49,32 @@ class MainActivity : ComponentActivity() {
                             val playerName = backStackEntry.arguments?.getString("playerName")
                             PlayerMachine(navController, playerName)
                         }
-                        composable("PlayerFightMachine/{playerChoice}") { backStackEntry ->
+                        composable("PlayerFightMachine/{playerChoice}/{playerName}") { backStackEntry ->
                             val playerChoice = backStackEntry.arguments?.getString("playerChoice")
-                            PlayerFightMachine(navController, playerChoice)
+                            val playerName = backStackEntry.arguments?.getString("playerName")
+                            PlayerFightMachine(navController, playerChoice, playerName)
                         }
                         composable("EnterNameSinglePlayer") { EnterNameSinglePlayer(navController) }
                         composable("EnterNamesTwoPlayers") { EnterNamesTwoPlayers(navController) }
-                        composable("playerStatus") { backStackEntry ->
+                        composable(
+                            "playerStatus/{playerName}/{rockCount}/{paperCount}/{scissorCount}",
+                            arguments = listOf(
+                                navArgument("playerName") { type = NavType.StringType },
+                                navArgument("rockCount") { type = NavType.IntType },
+                                navArgument("paperCount") { type = NavType.IntType },
+                                navArgument("scissorCount") { type = NavType.IntType }
+                            )
+                        ) { backStackEntry ->
                             val playerName = backStackEntry.arguments?.getString("playerName")
-                            PlayerStatusScreen(navController, playerName,
-                                rockCount = 0,
-                                paperCount = 0,
-                                scissorCount = 0
+                            val rockCount = backStackEntry.arguments?.getInt("rockCount") ?: 0
+                            val paperCount = backStackEntry.arguments?.getInt("paperCount") ?: 0
+                            val scissorCount = backStackEntry.arguments?.getInt("scissorCount") ?: 0
+                            PlayerStatusScreen(
+                                navController = navController,
+                                playerName = playerName,
+                                rockCount = rockCount,
+                                paperCount = paperCount,
+                                scissorCount = scissorCount
                             )
                         }
                     }
@@ -67,3 +83,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
